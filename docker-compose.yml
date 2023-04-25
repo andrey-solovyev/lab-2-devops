@@ -1,0 +1,73 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: mysql:latest
+    container_name: js-database
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: test
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - database-data:/usr/src/data
+    networks:
+      - js-develop
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=example --execute \"Select 1;\""
+      interval: 20s
+      timeout: 70s
+      retries: 3
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8000:8000
+    networks:
+      - js-develop
+
+  backend:
+    image: backend
+    build:
+      context: ./backend
+    restart: always
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: "http://localhost:3002"
+      JWT_SECRET_TOKEN: "token"
+      CORS_ORIGIN_REGEX: "http([s])?:\/\/localhost:3002"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3001" ]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - js-develop
+
+  frontend:
+    image: frontend
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+    restart: always
+    ports:
+      - "3002:3002"
+    depends_on:
+      - backend
+    environment:
+      SERVER_ORIGIN: "http://localhost:3002"
+    networks:
+      - js-develop
+#    healthcheck?
+volumes:
+  database-data:
+  backend-data:
+
+networks:
+  js-develop:
+    driver: bridge
