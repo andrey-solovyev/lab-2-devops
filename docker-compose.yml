@@ -60,6 +60,8 @@ services:
       - backend
     environment:
       SERVER_ORIGIN: "http://localhost:3001"
+      NODE_ENV: "development"
+      FRONTEND_START_COMMAND: "npm run build"
     networks:
       - js-develop
 #    healthcheck?
