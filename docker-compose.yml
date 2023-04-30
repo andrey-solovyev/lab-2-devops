@@ -5,7 +5,6 @@ services:
   db:
     image: mysql:latest
     container_name: js-database
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
       MYSQL_DATABASE: test
@@ -38,9 +37,9 @@ services:
     depends_on:
       - db
     environment:
-      MYSQL_HOST: "http://localhost:3002"
+      MYSQL_HOST: -db
       JWT_SECRET_TOKEN: "token"
-      CORS_ORIGIN_REGEX: "http([s])?:\/\/localhost:3002"
+      CORS_ORIGIN_REGEX: "http([s])?:\/\/localhost:3001"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:3001" ]
       interval: 1m30s
@@ -60,7 +59,7 @@ services:
     depends_on:
       - backend
     environment:
-      SERVER_ORIGIN: "http://localhost:3002"
+      SERVER_ORIGIN: "http://localhost:3001"
     networks:
       - js-develop
 #    healthcheck?
@@ -70,4 +69,3 @@ volumes:
 
 networks:
   js-develop:
-    driver: bridge
