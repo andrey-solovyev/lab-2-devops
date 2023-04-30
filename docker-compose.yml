@@ -9,6 +9,8 @@ services:
     environment:
       MYSQL_DATABASE: test
       MYSQL_ROOT_PASSWORD: example
+    ports:
+      - "3306:3306"
     volumes:
       - database-data:/usr/src/data
     networks:
@@ -37,9 +39,11 @@ services:
     depends_on:
       - db
     environment:
-      MYSQL_HOST: -db
+      MYSQL_HOST: "3306"
+#      DATABASE_HOST: "db"
       JWT_SECRET_TOKEN: "token"
       CORS_ORIGIN_REGEX: "http([s])?:\/\/localhost:3001"
+      BACKEND_START_COMMAND: "npm run start"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:3001" ]
       interval: 1m30s
@@ -56,8 +60,6 @@ services:
     restart: always
     ports:
       - "3002:3002"
-    depends_on:
-      - backend
     environment:
       SERVER_ORIGIN: "http://localhost:3001"
       NODE_ENV: "development"

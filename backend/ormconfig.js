@@ -1,10 +1,10 @@
 module.exports = {
   type: `mysql`,
-  host: process.env.MYSQL_HOST || `localhost`,
+  host: process.env.MYSQL_HOST || `127.0.0.1`,
   port: 3306,
   username: `root`,
-  password: `root`,
-  database: `tradeoffer_db`,
+  password: `example`,
+  database: `test`,
   entities: [`dist/**/*.entity{.ts,.js}`],
   subscribers: [`dist/**/*.subscriber{.ts,.js}`],
   synchronize: false,
