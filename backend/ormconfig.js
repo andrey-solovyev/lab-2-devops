@@ -1,9 +1,9 @@
 module.exports = {
   type: `mysql`,
-  host: process.env.MYSQL_HOST || `127.0.0.1`,
+  host: process.env.MYSQL_HOST || `localhost`,
   port: 3306,
   username: `root`,
-  password: `example`,
+  password: `12345`,
   database: `test`,
   entities: [`dist/**/*.entity{.ts,.js}`],
   subscribers: [`dist/**/*.subscriber{.ts,.js}`],
